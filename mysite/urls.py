@@ -11,8 +11,12 @@ urlpatterns = patterns('',
 	('^stone/$', stone),
 	('^time/$', Current_Time),
 	('^date/$', Current_DateTime),
+	('^url/$', Current_url_path),
 	('^date1/$', Current_DateTime1),
 	(r'^time/plus/(\d{1,2})/$',hours_ahead),
+	('^meta/$', display_meta),
+	('^search-form/$',search_form),
+	
 	
     # url(r'^admin/', include(admin.site.urls)),
 )

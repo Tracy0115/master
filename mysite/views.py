@@ -33,3 +33,17 @@ def Current_DateTime(request):
 def Current_DateTime1(request):
 	now = datetime.datetime.now()
 	return render_to_response('current datetime.html',{'current_date':now})
+
+def Current_url_path(request):
+	return HttpResponse("Welocom to the page at %s" % request.path)
+	
+def display_meta(request):
+    values = request.META.items()
+    values.sort()
+    html = []
+    for k, v in values:
+        html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))
+    return HttpResponse('<table>%s</table>' % '\n'.join(html))
+
+def search_form(quest):
+	return render_to_response('search_form.html')

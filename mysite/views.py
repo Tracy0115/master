@@ -3,6 +3,8 @@ import datetime
 from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render_to_response
+import test
+from books.models import Book
 
 def hello(request):
     return HttpResponse("Hello World")
@@ -47,3 +49,16 @@ def display_meta(request):
 
 def search_form(quest):
 	return render_to_response('search_form.html')
+
+def search(request):
+    error = False
+    if 'q' in request.GET:
+        q = request.GET['q']
+        if not q:
+            error = True
+        else:
+            books = Book.objects.filter(title__icontains=q)
+            return render_to_response('search_results.html',
+                {'books': books, 'query': q})
+    return render_to_response('search_form.html',
+        {'error': error})

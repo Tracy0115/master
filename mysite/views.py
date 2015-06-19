@@ -5,6 +5,9 @@ from django.template import Context
 from django.shortcuts import render_to_response
 import test
 from books.models import Book
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from mysite.forms import ContactForm
 
 def hello(request):
     return HttpResponse("Hello World")
@@ -47,18 +50,38 @@ def display_meta(request):
         html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, v))
     return HttpResponse('<table>%s</table>' % '\n'.join(html))
 
-def search_form(quest):
+def search_form(request):
 	return render_to_response('search_form.html')
 
 def search(request):
-    error = False
+    error = []
     if 'q' in request.GET:
         q = request.GET['q']
         if not q:
-            error = True
+            error.append('Enter a search form.')
+        elif len(q) > 20:
+            error.append('Please enter at most 20 characters.')
         else:
             books = Book.objects.filter(title__icontains=q)
             return render_to_response('search_results.html',
                 {'books': books, 'query': q})
     return render_to_response('search_form.html',
         {'error': error})
+		
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            send_mail(
+                cd['subject'],
+                cd['message'],
+                cd.get('email', 'noreply@example.com'),
+                ['siteowner@example.com'],
+            )
+            return HttpResponseRedirect('/contact/thanks/')
+    else:
+        form = ContactForm(
+			initial={'subject': 'I love your site!'}
+			)
+    return render_to_response('contact_form.html', {'form': form})

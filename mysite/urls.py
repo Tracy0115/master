@@ -17,6 +17,7 @@ urlpatterns = patterns('',
 	('^meta/$', display_meta),
 	('^search-form/$',search_form),
 	(r'^search/$', search),
+	(r'^contact/$', contact),
 	
 	
     # url(r'^admin/', include(admin.site.urls)),

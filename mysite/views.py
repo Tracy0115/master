@@ -4,7 +4,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.shortcuts import render_to_response
 import test
-from books.models import Book
+from books.models import *
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from mysite.forms import ContactForm
@@ -62,7 +62,7 @@ def search(request):
         elif len(q) > 20:
             error.append('Please enter at most 20 characters.')
         else:
-            books = Book.objects.filter(title__icontains=q)
+            books = Author.objects.filter(last_name=q)
             return render_to_response('search_results.html',
                 {'books': books, 'query': q})
     return render_to_response('search_form.html',
